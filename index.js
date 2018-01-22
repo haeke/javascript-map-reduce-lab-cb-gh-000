@@ -9001,10 +9001,51 @@ const issues = [
   }
 ];
 
-const replaceURL = (issue, index) => {
-  return Object.assign({}, issue, {
-    url: 'api-v2.github.com',
-  });
-}
+//use the map function to update the URL parameter in the data object
+//use Object.assign to create a new object 
+// use the replace function to change the text that you want
+const replaceURL = data.map(data => {
+    return Object.assign({}, data, {
+        url: data.url.replace('api.github.com', 'api-v2.github.com'),
+    });
+});
 
-var issuesWithUpdatedApiUrl = issues.reduce(replaceURL);
+// console.log(replaceURL);
+
+// COUNTING THE COMMENTS
+// To get a quick overview of our community's activity, let's sum up all comments of every issue.
+
+// The result should be in a variable called commentCountAcrossIssues
+// First, map the issues array and pull out the comments_count, to make things easier
+// Next, reduce the array of comment counts and add them all together
+// Feel free to chain these operations on the issues array for brevity — no need for a temporary variable
+
+var commentCountAcrossIssues = data.map(comment => comment.comments_count)
+                                    .reduce((sum, currentval) => sum + currentval);
+
+// console.log(commentCountAcrossIssues);
+
+// FILTERING FOR OPEN ISSUES
+// Looking at the data, it seems like some issues are closed already. Those aren't really relevant, so let's create a new array that only has open issues.
+
+// The result should be in a variable called openIssues
+// This new array should only contain issues where issue.state is set to 'open'
+
+var openIssues = data.reduce((openissue, nextissue) => {
+    return nextissue.state === 'open' ? [...openissue, nextissue] : openissue;
+}, []);
+
+console.log(openIssues);
+
+// I'M NOT A ROBOT
+// Some issues have been automatically created by the Learn.co bot. Let's filter these out, so we only see issues created by actual humans.
+
+// The result should be in a variable called nonAutomaticIssues
+// This new array should only contain issues that are not automatically created
+// Hint: check the issue.body for a clue
+
+var nonAutomaticIssues = data.reduce((issues, nextissue) => {
+    return (nextissue.body !== 'This pull request has been automatically created by learn.co.') ? [...issues, nextissue] : issues
+}, []);
+
+console.log(nonAutomaticIssues);
